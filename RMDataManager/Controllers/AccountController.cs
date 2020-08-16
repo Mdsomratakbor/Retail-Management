@@ -319,6 +319,7 @@ namespace RMDataManager.Controllers
         }
 
         // POST api/Account/Register
+        [AcceptVerbs("GET", "POST")]
         [AllowAnonymous]
         [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
