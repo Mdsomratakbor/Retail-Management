@@ -9,5 +9,11 @@ namespace RMDekstopUI.ViewModels
 {
     public class ShallViewModel: Conductor<Object>
     {
+        private LoginViewModel _loginVM;
+        public  ShallViewModel(LoginViewModel loginVM)
+        {
+            _loginVM = loginVM;
+             ActivateItemAsync (_loginVM);
+        }
     }
 }
