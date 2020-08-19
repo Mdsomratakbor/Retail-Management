@@ -42,7 +42,7 @@ namespace RMDekstopUI.ViewModels
         }    
         public void LogIn(string userName, string password)
         {
-            Console.WriteLine();
+            System.Windows.MessageBox.Show("Your are log in");
         }
    
     }
