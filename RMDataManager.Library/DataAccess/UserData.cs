@@ -8,5 +8,9 @@ namespace RMDataManager.Library.DataAccess
 {
     public class UserData
     {
+        public List<UserModel> GetUserById(string Id)
+        {
+
+        }
     }
 }

@@ -3,7 +3,7 @@
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT FirstName, LastName, EmailAddress 
+	SELECT Id, FirstName, LastName, EmailAddress, CreateDate 
 	FROM [dbo].[User]
 	WHERE Id = @Id
 END
