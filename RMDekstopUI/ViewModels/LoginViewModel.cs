@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using RMDekstopUI.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,11 @@ namespace RMDekstopUI.ViewModels
     {
         private string _userName;
         private string _password;
+        private IAPIHelper _apiHelper;
+        public LoginViewModel(IAPIHelper apiHelper)
+        {
+            _apiHelper = apiHelper;
+        }
         public string UserName
         {
             get { return _userName; }
@@ -40,9 +46,17 @@ namespace RMDekstopUI.ViewModels
             return output;
         
         }    
-        public void LogIn(string userName, string password)
+        public async Task LogIn(string userName, string password)
         {
-            System.Windows.MessageBox.Show("Your are log in");
+            try
+            {
+                var reusut = await _apiHelper.Authenticate(userName, password);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+          
         }
    
     }
