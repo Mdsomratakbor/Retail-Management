@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RMDesktopUI.LIbrary
+namespace RMDesktopUI.LIbrary.Models
 {
-    public class Class1
+    public class LoggedInUserModel
     {
     }
 }
