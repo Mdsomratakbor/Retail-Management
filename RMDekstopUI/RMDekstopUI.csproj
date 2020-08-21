@@ -74,6 +74,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helper\APIHelper.cs" />
     <Compile Include="Helper\IAPIHelper.cs" />
+    <Compile Include="Helper\PasswordBoxHelper.cs" />
     <Compile Include="Models\AuthenticateUser.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ShallViewModel.cs" />

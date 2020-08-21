@@ -24,6 +24,7 @@ namespace RMDekstopUI.ViewModels
             {
                 _userName = value;
                 NotifyOfPropertyChange(() => UserName);
+                NotifyOfPropertyChange(() => CanLogIn);
             }
         }
         
@@ -34,16 +35,20 @@ namespace RMDekstopUI.ViewModels
             {
                 _password = value;
                 NotifyOfPropertyChange(() => Password);
+                NotifyOfPropertyChange(() => CanLogIn);
             }
         }
-        public bool CanLogIn(string usrName, string password)
+        public bool CanLogIn
         {
-            bool output = false;
-            if(usrName.Length> 0 && password.Length > 0)
+            get
             {
-                output = true;
+                bool output = false;
+                if (UserName?.Length > 0 && Password?.Length > 0)
+                {
+                    output = true;
+                }
+                return output;
             }
-            return output;
         
         }    
         public async Task LogIn(string userName, string password)
