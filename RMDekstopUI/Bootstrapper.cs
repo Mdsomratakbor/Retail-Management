@@ -2,6 +2,8 @@
 using RMDekstopUI.Helper;
 using RMDekstopUI.ViewModels;
 using RMDekstopUI.Views;
+using RMDesktopUI.LIbrary.Api;
+using RMDesktopUI.LIbrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +31,8 @@ namespace RMDekstopUI
             _container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
-                .Singleton<IAPIHelper, APIHelper>();
+                .Singleton<IAPIHelper, APIHelper>()
+                .Singleton<ILoggedInUserModel, LoggedInUserModel>();
 
             GetType().Assembly.GetTypes()
                 .Where(type => type.IsClass)

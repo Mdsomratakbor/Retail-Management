@@ -75,10 +75,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Helper\APIHelper.cs" />
-    <Compile Include="Helper\IAPIHelper.cs" />
     <Compile Include="Helper\PasswordBoxHelper.cs" />
-    <Compile Include="Models\AuthenticateUser.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ShallViewModel.cs" />
     <Compile Include="Views\LoginView.xaml.cs">
@@ -129,6 +126,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="retail_icon_bvG_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RMDesktopUI.LIbrary\RMDesktopUI.LIbrary.csproj">
+      <Project>{e3871933-fb93-4ded-8b90-b9af4f4944ae}</Project>
+      <Name>RMDesktopUI.LIbrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

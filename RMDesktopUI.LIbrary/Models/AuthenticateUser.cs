@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RMDekstopUI.Models
+namespace RMDesktopUI.LIbrary.Models
 {
     public class AuthenticateUser
     {

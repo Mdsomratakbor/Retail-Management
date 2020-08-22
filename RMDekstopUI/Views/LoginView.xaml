@@ -30,7 +30,7 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="64" FontFamily="Segoe UI Light" Margin="0 0 0 20">Login Form</TextBlock>
         <!--Error Message row-->
-        <TextBlock x:Name="ErrorMessage" Grid.Row="1" Grid.Column="1" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=collapsed}" Grid.ColumnSpan="2"  Foreground="Red" MaxWidth="300" TextWrapping="Wrap" Margin="0 0 0 20"/>
+        <TextBlock x:Name="ErrorMessage" Grid.Row="1" Grid.Column="1" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=collapsed}" Grid.ColumnSpan="2"  Foreground="#FFE2FF27" MaxWidth="300" TextWrapping="Wrap" Margin="0 0 0 20"/>
         <!---Username row-->
         <TextBlock Grid.Row="2" Grid.Column="1" Margin="0 0 5 10">
             Username :

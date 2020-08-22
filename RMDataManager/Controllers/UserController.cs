@@ -13,7 +13,7 @@ namespace RMDataManager.Controllers
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
-
+        [HttpGet]
         // GET: User/GetbyId/5
         public UserModel GetById()
         {

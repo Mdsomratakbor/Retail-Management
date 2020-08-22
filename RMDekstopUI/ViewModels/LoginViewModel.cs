@@ -1,10 +1,10 @@
 ﻿using Caliburn.Micro;
-using RMDekstopUI.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RMDesktopUI.LIbrary.Api;
 
 namespace RMDekstopUI.ViewModels
 {
@@ -81,7 +81,8 @@ namespace RMDekstopUI.ViewModels
             try
             {
                ErrorMessage = string.Empty;
-                var reusut = await _apiHelper.Authenticate(UserName, Password);
+                var result = await _apiHelper.Authenticate(UserName, Password);
+                await _apiHelper.GetLoggedInUserInfo(result.Access_Token);
             }
             catch(Exception ex)
             {
