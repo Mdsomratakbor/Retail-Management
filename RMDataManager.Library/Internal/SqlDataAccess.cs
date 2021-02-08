@@ -5,8 +5,6 @@ using System.Data;
 using Dapper;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RMDataManager.Library.Internal.DataAccess
 {
@@ -25,14 +23,13 @@ namespace RMDataManager.Library.Internal.DataAccess
                 List<T> rows = cnn.Query<T>(storeProcedure, parametars, commandType: CommandType.StoredProcedure).ToList();
                 return rows;
             }
-        }
+        } 
         public void SaveData<T>(string storeProcedure, T parametars, string connectionStringName)
         {
             string connection = GetConnectionString(connectionStringName);
             using (IDbConnection cnn = new SqlConnection(connection))
             {
-                 cnn.Execute(storeProcedure, parametars, commandType: CommandType.StoredProcedure);
-              
+                 cnn.Execute(storeProcedure, parametars, commandType: CommandType.StoredProcedure);           
             }
         }
 
