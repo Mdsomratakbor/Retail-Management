@@ -1,19 +1,36 @@
 ﻿using Caliburn.Micro;
+using RMDekstopUI.EventsModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RMDekstopUI.ViewModels
 {
-    public class ShallViewModel: Conductor<Object>
+    public class ShallViewModel: Conductor<object>, IHandle<LogOnEventModel>
     {
-        private LoginViewModel _loginVM;
-        public  ShallViewModel(LoginViewModel loginVM)
+     
+        private readonly IEventAggregator _events;
+        private SalesViewModel _salesVM;
+        private SimpleContainer _container;
+
+        public  ShallViewModel( IEventAggregator events, SalesViewModel salesVM, SimpleContainer container)
         {
-            _loginVM = loginVM;
-             ActivateItemAsync (_loginVM);
+            _events = events;
+          
+            _salesVM = salesVM;
+            _container = container;
+            _events.Subscribe(this);
+            ActivateItemAsync(_container.GetInstance<LoginViewModel>());
+
+        }
+
+        public async Task HandleAsync(LogOnEventModel message, CancellationToken cancellationToken)
+        {
+            await ActivateItemAsync(_salesVM)
+     ;
         }
     }
 }
