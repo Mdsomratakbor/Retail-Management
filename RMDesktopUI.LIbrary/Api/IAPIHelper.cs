@@ -8,5 +8,6 @@ namespace RMDesktopUI.LIbrary.Api
     {
         Task<AuthenticateUser> Authenticate(string userName, string password);
         Task GetLoggedInUserInfo(string token);
+        HttpClient ApiClient { get;  }
     }
 }

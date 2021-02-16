@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNet.Identity;
 using System.Web.Http;
 using RMDataManager.Models;
+using RMDataManager.Library.DataAccess;
 
 namespace RMDataManager.Controllers
 {
@@ -11,9 +12,12 @@ namespace RMDataManager.Controllers
     public class ProductController : ApiController
     {
         // GET: Product
-        public List<ProductModel> Index()
+   
+        [Route("api/product")]
+        public List<ProductModel> Get()
         {
-            return View();
+            ProductData data = new ProductData();
+            return data.GetProducts();
         }
     }
 }

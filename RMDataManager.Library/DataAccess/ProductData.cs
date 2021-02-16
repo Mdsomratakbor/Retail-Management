@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RMDataManager.Library.Models;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RMDataManager.Models;
+using RMDataManager.Library.Internal.DataAccess;
 
 namespace RMDataManager.Library.DataAccess
 {
@@ -12,7 +8,9 @@ namespace RMDataManager.Library.DataAccess
     {
         public List<ProductModel> GetProducts()
         {
-
+            SqlDataAccess sql = new SqlDataAccess();
+            var output = sql.LoadData<ProductModel, dynamic>("dbo.spProduct_GetAll",new { }, "RMDatabaseConnection");
+            return output;
         }
     }
 }
