@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using RMDekstopUI.Library.ViewModels;
 using RMDesktopUI.LIbrary.Api;
+using RMDesktopUI.LIbrary.Helpers;
 using RMDesktopUI.LIbrary.Models;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,11 @@ namespace RMDekstopUI.ViewModels
     public class SalesViewModel : Screen
     {
         private IProductEndPoint _productEndPoint;
-
-        public SalesViewModel(IProductEndPoint productEndPoint)
+        private IConfigHelper _configHelper;
+        public SalesViewModel(IProductEndPoint productEndPoint, IConfigHelper configHelper)
         {
             _productEndPoint = productEndPoint;
+            _configHelper = configHelper;
 
         }
         protected override async void OnViewLoaded(object view)
@@ -55,7 +57,7 @@ namespace RMDekstopUI.ViewModels
             }
         }
 
-        private BindingList<CartItemModel>  _cart =new BindingList<CartItemModel>();
+        private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
 
         public BindingList<CartItemModel> Cart
         {
@@ -86,33 +88,47 @@ namespace RMDekstopUI.ViewModels
         {
             get
             {
-                // TODO - Replace with Calculation
-                decimal subTotal = 0;
-                foreach (var item in Cart)
-                {
-                    subTotal += item.Product.RetailPrice * item.QuantityCart;
-                }
-                return subTotal.ToString("C");
+                return CalculateSubTotal().ToString("C");
             }
+        }
+
+        private decimal CalculateSubTotal()
+        {
+            decimal subTotal = 0;
+            foreach (var item in Cart)
+            {
+                subTotal += item.Product.RetailPrice * item.QuantityCart;
+            }
+            return subTotal;
+        }
+        private decimal CalculateTax()
+        {
+            decimal taxAmount = 0;
+            decimal taxRate = _configHelper.GetTaxRate()/100;
+            foreach (var item in Cart)
+            {
+                if (item.Product.IsTaxable)
+                {
+                    taxAmount += (item.Product.RetailPrice * item.QuantityCart * taxRate);
+                }
+
+            }
+            return taxAmount;
         }
         public string Tax
         {
             get
-            {
-                decimal taxAmount = 0;
-                foreach (var item in Cart)
-                {
-                    taxAmount += ();
-                }
-                return taxAmount.ToString("C");
+            { 
+                return CalculateTax().ToString("C");
             }
         }
+        
         public string Total
         {
             get
             {
-                // TODO - Replace with Calculation
-                return "$0.00";
+                decimal total = CalculateSubTotal() + CalculateTax();
+                return total.ToString("C");
             }
         }
         public bool CanAddToCart
@@ -120,10 +136,6 @@ namespace RMDekstopUI.ViewModels
             get
             {
                 bool output = false;
-
-
-                // Make sure something is selected
-                // Make sure ther is an item quantity
                 if (ItemQuantity > 0 && SelectedProduct?.QuantityStock >= ItemQuantity)
                 {
                     output = true;
@@ -139,13 +151,13 @@ namespace RMDekstopUI.ViewModels
         public void AddToCart()
         {
             CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
-            if(existingItem!= null)
+            if (existingItem != null)
             {
                 existingItem.QuantityCart += ItemQuantity;
                 SelectedProduct.QuantityStock -= ItemQuantity;
                 //// HACK : There should be a better way of refreshing the cart display
-               Cart.Remove(existingItem);
-               Cart.Add(existingItem);
+                Cart.Remove(existingItem);
+                Cart.Add(existingItem);
             }
             else
             {
@@ -156,11 +168,13 @@ namespace RMDekstopUI.ViewModels
                 };
                 Cart.Add(item);
             }
-          
+
             SelectedProduct.QuantityStock -= ItemQuantity;
             ItemQuantity = 1;
             NotifyOfPropertyChange(() => SubTotal);
-        
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+
         }
 
         public bool CanRemoveFromCart
@@ -168,10 +182,6 @@ namespace RMDekstopUI.ViewModels
             get
             {
                 bool output = false;
-
-
-                // Make sure something is selected
-                // Make sure ther is an item quantity
                 return output;
             }
 
@@ -179,6 +189,8 @@ namespace RMDekstopUI.ViewModels
         public void RemoveFromCart()
         {
             NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
         }
 
         public bool CanCheckOut
