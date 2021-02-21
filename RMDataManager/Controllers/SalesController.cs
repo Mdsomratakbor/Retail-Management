@@ -13,7 +13,7 @@ namespace RMDataManager.Controllers
     {
         public void Post(SaleModel sale)
         {
-            Console.WriteLine();
+            Console.WriteLine(sale);
         }
     }
 }

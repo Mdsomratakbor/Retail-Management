@@ -214,10 +214,10 @@ namespace RMDekstopUI.ViewModels
         public async Task  CheckOut()
         {
             // Create a SalesModel and post to the API
-            SalesModel sale = new SalesModel();
+            SaleModel sale = new SaleModel();
             foreach (var item in Cart)
             {
-                sale.salesDetails.Add(new SalesDetailModel
+                sale.SalesDetails.Add(new SaleDetailModel
                 {
                     ProductId = item.Product.Id,
                     Quantity = item.QuantityCart

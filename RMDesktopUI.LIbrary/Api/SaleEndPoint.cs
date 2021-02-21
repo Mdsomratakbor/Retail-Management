@@ -15,9 +15,9 @@ namespace RMDesktopUI.LIbrary.Api
         {
             _apiHelper = apiHelper;
         }
-        public async Task PostSale(SalesModel sales)
+        public async Task PostSale(SaleModel sale)
         {
-            using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("/api/sales/", sales))
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("/api/sales/", sale))
             {
                 if (response.IsSuccessStatusCode)
                 {

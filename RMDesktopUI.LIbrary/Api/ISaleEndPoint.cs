@@ -5,6 +5,6 @@ namespace RMDesktopUI.LIbrary.Api
 {
     public interface ISaleEndPoint
     {
-        Task PostSale(SalesModel sale);
+        Task PostSale(SaleModel sale);
     }
 }
