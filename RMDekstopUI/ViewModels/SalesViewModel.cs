@@ -105,14 +105,15 @@ namespace RMDekstopUI.ViewModels
         {
             decimal taxAmount = 0;
             decimal taxRate = _configHelper.GetTaxRate()/100;
-            foreach (var item in Cart)
-            {
-                if (item.Product.IsTaxable)
-                {
-                    taxAmount += (item.Product.RetailPrice * item.QuantityCart * taxRate);
-                }
+            //    foreach (var item in Cart)
+            //   {
+            //      if (item.Product.IsTaxable)
+            //     {
+            // taxAmount += (item.Product.RetailPrice * item.QuantityCart * taxRate);
+            //    }
 
-            }
+            //  }
+            Cart.Where(x => x.Product.IsTaxable).Sum(x => x.Product.RetailPrice * x.QuantityCart * taxRate);
             return taxAmount;
         }
         public string Tax
