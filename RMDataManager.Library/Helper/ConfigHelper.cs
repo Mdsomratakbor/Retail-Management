@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RMDesktopUI.LIbrary.Helpers
+namespace RMDataManager.Library.Helper
 {
-    public class ConfigHelper : IConfigHelper
+    public class ConfigHelper 
     {
         // TODO: Move this form config to the API
-        public decimal GetTaxRate()
+        public static decimal GetTaxRate()
         {
             string rateTax = ConfigurationManager.AppSettings["taxRate"];
             bool isValidTaxRate = Decimal.TryParse(rateTax, out decimal output);

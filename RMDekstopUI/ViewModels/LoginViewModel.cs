@@ -11,8 +11,8 @@ namespace RMDekstopUI.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        private string _userName;
-        private string _password;
+        private string _userName = "somrat876@gmail.com";
+        private string _password = "pWT@123456";
         private IAPIHelper _apiHelper;
         private IEventAggregator _events;
         public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events)

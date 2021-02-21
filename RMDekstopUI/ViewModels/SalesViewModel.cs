@@ -16,11 +16,12 @@ namespace RMDekstopUI.ViewModels
     {
         private IProductEndPoint _productEndPoint;
         private IConfigHelper _configHelper;
-        public SalesViewModel(IProductEndPoint productEndPoint, IConfigHelper configHelper)
+        private ISaleEndPoint _saleEndPoint;
+        public SalesViewModel(IProductEndPoint productEndPoint, IConfigHelper configHelper, ISaleEndPoint saleEndPoint)
         {
             _productEndPoint = productEndPoint;
             _configHelper = configHelper;
-
+            _saleEndPoint = saleEndPoint;
         }
         protected override async void OnViewLoaded(object view)
         {
@@ -176,6 +177,7 @@ namespace RMDekstopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
 
         }
 
@@ -200,15 +202,28 @@ namespace RMDekstopUI.ViewModels
             get
             {
                 bool output = false;
-
+                if (Cart.Count > 0)
+                {
+                    output = true;
+                }
 
                 return output;
             }
 
         }
-        public void CheckOut()
+        public async Task  CheckOut()
         {
-
+            // Create a SalesModel and post to the API
+            SalesModel sale = new SalesModel();
+            foreach (var item in Cart)
+            {
+                sale.salesDetails.Add(new SalesDetailModel
+                {
+                    ProductId = item.Product.Id,
+                    Quantity = item.QuantityCart
+                });
+            }
+            await _saleEndPoint.PostSale(sale);
         }
 
 
