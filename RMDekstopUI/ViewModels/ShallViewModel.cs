@@ -23,7 +23,7 @@ namespace RMDekstopUI.ViewModels
             _salesVM = salesVM;
             _container = container;
             _events.Subscribe(this);
-            ActivateItemAsync(_container.GetInstance<LoginViewModel>());
+            ActivateItemAsync(IoC.Get<LoginViewModel>());
 
         }
 
