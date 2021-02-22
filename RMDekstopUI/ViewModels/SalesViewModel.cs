@@ -114,7 +114,7 @@ namespace RMDekstopUI.ViewModels
             //    }
 
             //  }
-            Cart.Where(x => x.Product.IsTaxable)
+            taxAmount += Cart.Where(x => x.Product.IsTaxable)
                 .Sum(x => x.Product.RetailPrice * x.QuantityCart * taxRate);
             return taxAmount;
         }

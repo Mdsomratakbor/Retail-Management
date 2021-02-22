@@ -15,7 +15,7 @@ namespace RMDataManager.Library.DataAccess
         {
             List<SaleDetailDBModel> details = new List<SaleDetailDBModel>();
             ProductData product = new ProductData();
-            var taxRate = ConfigHelper.GetTaxRate();
+            var taxRate = ConfigHelper.GetTaxRate()/100;
             foreach (var item in saleInfo.SalesDetails)
             {
                var  detail = new SaleDetailDBModel
@@ -45,11 +45,12 @@ namespace RMDataManager.Library.DataAccess
                 CashierId = cashierId, 
 
             };
-            sale.Total = sale.SubTotal + sale.Total;
+            sale.Total = sale.SubTotal + sale.Tax;
 
             SqlDataAccess sql = new SqlDataAccess();
             sql.SaveData<SaleDBModel>("dbo.spSale_Insert", sale, "RMDatabaseConnection");
 
+            sale.Id = sql.LoadData<int, dynamic>("dbo.spSale_Lookup", new { CashierId = sale.CashierId, SaleDate = sale.SaleDate }, "RMDatabaseConnection").FirstOrDefault();
             details.ForEach(x => {
                 x.SaleId = sale.Id; sql.SaveData("dbo.spSalesDetail_Insert", x, "RMDatabaseConnection");
             }); 
