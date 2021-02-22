@@ -1,4 +1,5 @@
-﻿using RMDataManager.Library.Internal.DataAccess;
+﻿using RMDataManager.Library.Helper;
+using RMDataManager.Library.Internal.DataAccess;
 using RMDataManager.Library.Models;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,12 @@ namespace RMDataManager.Library.DataAccess
 {
     public class SaleData
     {
-        public void SaveSale(SaleModel sale)
+        public void SaveSale(SaleModel saleInfo,string cashierId)
         {
             List<SaleDetailDBModel> details = new List<SaleDetailDBModel>();
             ProductData product = new ProductData();
-            foreach (var item in sale.SalesDetails)
+            var taxRate = ConfigHelper.GetTaxRate();
+            foreach (var item in saleInfo.SalesDetails)
             {
                var  detail = new SaleDetailDBModel
                 {
@@ -23,11 +25,43 @@ namespace RMDataManager.Library.DataAccess
                 };
               
                var productInfo = product.GetProductById(item.ProductId);
+                if(productInfo== null)
+                {
+                    throw new Exception($"The Product Id of {item.ProductId} could not be found int the database.");
+                }
+                detail.PurchasePrice = (productInfo.RetailPrice * detail.Quantity);
+                if (productInfo.IsTaxable)
+                {
+                    detail.Tax = (detail.PurchasePrice * taxRate);
+                }
+
                 details.Add(detail);
             }
 
-            // TOD: Make this SOLID/DRY/Better
-            // Start  filling ih the 
+            SaleDBModel sale = new SaleDBModel
+            {
+                SubTotal = details.Sum(x => x.PurchasePrice),
+                Tax = details.Sum(x=>x.Tax),
+                CashierId = cashierId, 
+
+            };
+            sale.Total = sale.SubTotal + sale.Total;
+
+            SqlDataAccess sql = new SqlDataAccess();
+            sql.SaveData<SaleDBModel>("dbo.spSale_Insert", sale, "RMDatabaseConnection");
+
+            details.ForEach(x => {
+                x.SaleId = sale.Id; sql.SaveData("dbo.spSalesDetail_Insert", x, "RMDatabaseConnection");
+            }); 
+
+
+            //foreach (var item in details)
+           // {
+           //     item.SaleId = sale.Id;
+           //     sql.SaveData//("dbo.spSalesDetail_Insert", item, "RMDatabaseConnection");
+           // }
+
+
         }
     }
 }
