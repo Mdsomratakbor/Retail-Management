@@ -1,5 +1,7 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using RMDekstopUI.Library.ViewModels;
+using RMDekstopUI.Models;
 using RMDesktopUI.LIbrary.Api;
 using RMDesktopUI.LIbrary.Helpers;
 using RMDesktopUI.LIbrary.Models;
@@ -17,11 +19,13 @@ namespace RMDekstopUI.ViewModels
         private IProductEndPoint _productEndPoint;
         private IConfigHelper _configHelper;
         private ISaleEndPoint _saleEndPoint;
-        public SalesViewModel(IProductEndPoint productEndPoint, IConfigHelper configHelper, ISaleEndPoint saleEndPoint)
+        private IMapper _mapper;
+        public SalesViewModel(IProductEndPoint productEndPoint, IConfigHelper configHelper, ISaleEndPoint saleEndPoint, IMapper mapper)
         {
             _productEndPoint = productEndPoint;
             _configHelper = configHelper;
             _saleEndPoint = saleEndPoint;
+            _mapper = mapper;
         }
         protected override async void OnViewLoaded(object view)
         {
@@ -32,10 +36,11 @@ namespace RMDekstopUI.ViewModels
         private async Task LoadProduts()
         {
             var productList = await _productEndPoint.GetAll();
-            Products = new BindingList<ProductModel>(productList);
+            var product = _mapper.Map<List<ProductDisplayModel>>(productList);
+            Products = new BindingList<ProductDisplayModel>(product);
         }
-        private BindingList<ProductModel> _products;
-        public BindingList<ProductModel> Products
+        private BindingList<ProductDisplayModel> _products;
+        public BindingList<ProductDisplayModel> Products
         {
             get { return _products; }
             set
@@ -46,8 +51,8 @@ namespace RMDekstopUI.ViewModels
         }
 
 
-        public ProductModel _selectedProduct;
-        public ProductModel SelectedProduct
+        public ProductDisplayModel _selectedProduct;
+        public ProductDisplayModel SelectedProduct
         {
             get { return _selectedProduct; }
             set
@@ -58,9 +63,9 @@ namespace RMDekstopUI.ViewModels
             }
         }
 
-        private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
+        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
 
-        public BindingList<CartItemModel> Cart
+        public BindingList<CartItemDisplayModel> Cart
         {
             get { return _cart; }
             set
@@ -153,18 +158,17 @@ namespace RMDekstopUI.ViewModels
         }
         public void AddToCart()
         {
-            CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+            CartItemDisplayModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
             if (existingItem != null)
             {
                 existingItem.QuantityCart += ItemQuantity;
                 SelectedProduct.QuantityStock -= ItemQuantity;
-                //// HACK : There should be a better way of refreshing the cart display
-                Cart.Remove(existingItem);
-                Cart.Add(existingItem);
+           
+        
             }
             else
             {
-                CartItemModel item = new CartItemModel()
+                CartItemDisplayModel item = new CartItemDisplayModel()
                 {
                     Product = SelectedProduct,
                     QuantityCart = ItemQuantity
