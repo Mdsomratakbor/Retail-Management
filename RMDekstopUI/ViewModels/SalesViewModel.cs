@@ -50,6 +50,15 @@ namespace RMDekstopUI.ViewModels
             }
         }
 
+        private async Task  ResetSalesViewModel()
+        {
+            Cart = new BindingList<CartItemDisplayModel>();
+            await LoadProduts();
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+        }
 
         public ProductDisplayModel _selectedProduct;
         public ProductDisplayModel SelectedProduct
@@ -194,6 +203,7 @@ namespace RMDekstopUI.ViewModels
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
 
+
         }
 
         public bool CanRemoveFromCart
@@ -201,7 +211,7 @@ namespace RMDekstopUI.ViewModels
             get
             {
                 bool output = false;
-                if(SelectedCartItem != null && SelectedCartItem?.Product.QuantityStock>0)
+                if(SelectedCartItem != null && SelectedCartItem?.QuantityCart>0)
                 {
                     output = true;
                 }
@@ -225,7 +235,8 @@ namespace RMDekstopUI.ViewModels
             }
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
-            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
 
         public bool CanCheckOut
@@ -255,6 +266,7 @@ namespace RMDekstopUI.ViewModels
                 });
             }
             await _saleEndPoint.PostSale(sale);
+            await ResetSalesViewModel();
         }
 
 
