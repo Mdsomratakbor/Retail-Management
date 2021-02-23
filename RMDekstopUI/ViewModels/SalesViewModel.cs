@@ -62,7 +62,18 @@ namespace RMDekstopUI.ViewModels
                 NotifyOfPropertyChange(() => CanAddToCart);
             }
         }
-
+        
+                public CartItemDisplayModel _selectedCartItem;
+        public CartItemDisplayModel SelectedCartItem
+        {
+            get { return _selectedCartItem; }
+            set
+            {
+                _selectedCartItem = value;
+                NotifyOfPropertyChange(() => SelectedCartItem);
+                NotifyOfPropertyChange(() => CanRemoveFromCart);
+            }
+        }
         private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
 
         public BindingList<CartItemDisplayModel> Cart
@@ -190,12 +201,28 @@ namespace RMDekstopUI.ViewModels
             get
             {
                 bool output = false;
+                if(SelectedCartItem != null && SelectedCartItem?.Product.QuantityStock>0)
+                {
+                    output = true;
+                }
                 return output;
             }
 
         }
         public void RemoveFromCart()
         {
+
+            SelectedCartItem.Product.QuantityStock += 1;
+            if (SelectedCartItem.QuantityCart > 1)
+            {
+                SelectedCartItem.QuantityCart -= 1;
+               
+            }
+            else
+            {
+               
+                Cart.Remove(SelectedCartItem);
+            }
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
