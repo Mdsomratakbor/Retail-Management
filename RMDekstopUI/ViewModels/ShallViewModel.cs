@@ -36,7 +36,7 @@ namespace RMDekstopUI.ViewModels
         }
         public async Task  LogOut()
         {
-            _user.LogOffUser();
+            _user.ResetUserModel();
             _apiHelper.LogOffUser();
            await  ActivateItemAsync(IoC.Get<LoginViewModel>());
             NotifyOfPropertyChange(() => IsLoggedIn);

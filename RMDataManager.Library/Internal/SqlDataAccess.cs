@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace RMDataManager.Library.Internal.DataAccess
 {
-    internal class SqlDataAccess
+    internal class SqlDataAccess : IDisposable
     {
         public string GetConnectionString(string name)
         {
@@ -33,7 +33,54 @@ namespace RMDataManager.Library.Internal.DataAccess
             }
         }
 
+        private IDbConnection _connection;
+        private IDbTransaction _transation;
 
+        public void SaveDataInTransaction<T>(string storeProcedure, T parametars)
+        { 
+
+            
+                _connection.Execute(storeProcedure, parametars, commandType: CommandType.StoredProcedure, transaction: _transation);
+            
+        }
+
+        public List<T> LoadDataInTransaction<T, U>(string storeProcedure, U parametars)
+        {
+
+           
+                List<T> rows = _connection.Query<T>(storeProcedure, parametars, commandType: CommandType.StoredProcedure, transaction: _transation).ToList();
+                return rows;
+            
+        }
+
+        public void StartTransaction( string connectionStringName)
+        {
+            string connectionString = GetConnectionString(connectionStringName);
+            _connection = new SqlConnection(connectionString);
+            _connection.Open();
+            _transation = _connection.BeginTransaction();
+           
+        }
+        public void CommitTransaction()
+        {
+            _transation?.Commit();
+            _connection?.Close();
+        }
+        public void RollbackTransaction()
+        {
+            _transation.Rollback();
+            _connection?.Close();
+        }
+
+        public void Dispose()
+        {
+            CommitTransaction();
+        }
+        // Open connect/start transaction method
+        // load using the transaction
+        // save using the transaction
+        // close connection/stop transaction method
+        // Dispose
 
     }
 }
