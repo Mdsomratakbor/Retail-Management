@@ -20,17 +20,31 @@ namespace RMDekstopUI.ViewModels
         private IConfigHelper _configHelper;
         private ISaleEndPoint _saleEndPoint;
         private IMapper _mapper;
-        public SalesViewModel(IProductEndPoint productEndPoint, IConfigHelper configHelper, ISaleEndPoint saleEndPoint, IMapper mapper)
+        private readonly StatusInfoViewModel _status;
+        private readonly IWindowManager _window;
+
+        public SalesViewModel(IProductEndPoint productEndPoint, IConfigHelper configHelper, ISaleEndPoint saleEndPoint, IMapper mapper, StatusInfoViewModel status, IWindowManager window)
         {
             _productEndPoint = productEndPoint;
             _configHelper = configHelper;
             _saleEndPoint = saleEndPoint;
             _mapper = mapper;
+            _status = status;
+            _window = window;
         }
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
-            await LoadProduts();
+            try
+            {
+                await LoadProduts();
+            }
+            catch (Exception ex)
+            {
+
+                _status.UpdateMessage("Unauthorzed Access", "You do not have permission to interact with the sales Form.");
+                await _window.ShowDialogAsync(_status, null, null);
+            }
 
         }
         private async Task LoadProduts()
