@@ -13,12 +13,14 @@ namespace RMDataManager.Controllers
     [Authorize]
     public class SalesController : ApiController
     {
+        [Authorize(Roles = "Casheir")]
         public void Post(SaleModel sale)
         {
             SaleData data = new SaleData();
             string userId = RequestContext.Principal.Identity.GetUserId();
             data.SaveSale(sale, userId);
         }
+        [Authorize(Roles = "Admin, Manager")]
         [Route("GetSalesReport")]
         public List<SaleReportModel> GetSalesReport()
         {

@@ -8,7 +8,7 @@ using RMDataManager.Library.DataAccess;
 
 namespace RMDataManager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Casheir")]
     public class ProductController : ApiController
     {
         // GET: Product
