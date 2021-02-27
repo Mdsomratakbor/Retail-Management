@@ -8,9 +8,11 @@ using RMDesktopUI.LIbrary.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RMDekstopUI.ViewModels
 {
@@ -41,9 +43,23 @@ namespace RMDekstopUI.ViewModels
             }
             catch (Exception ex)
             {
-
-                _status.UpdateMessage("Unauthorzed Access", "You do not have permission to interact with the sales Form.");
-                await _window.ShowDialogAsync(_status, null, null);
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.Title = "System Error";
+               
+                if(ex.Message== "Unauthorized")
+                {
+                    _status.UpdateMessage("Unauthorized Access", "You do not have permission to interact with the sales Form.");
+                    await _window.ShowDialogAsync(_status, null, settings);
+                }
+                else
+                {
+                    _status.UpdateMessage("Fatal Exception", ex.Message);
+                    await _window.ShowDialogAsync(_status, null, settings);
+                }
+                       
+                await TryCloseAsync();
             }
 
         }
