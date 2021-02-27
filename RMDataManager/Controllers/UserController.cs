@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using RMDataManager.Library.DataAccess;
 using RMDataManager.Library.Models;
+using RMDataManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +22,20 @@ namespace RMDataManager.Controllers
             string userId = RequestContext.Principal.Identity.GetUserId();
             UserData data = new UserData();
            return data.GetUserById(userId).FirstOrDefault();
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("Admin/GetAllUsers")]
+        public void GetAllUsers()
+        {
+            
+            using (var context = new ApplicationDbContext())
+            {
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+                var users = userManager.Users.ToList();
+                var roles = context.Roles.ToList();
+            }
         }
         
     }
