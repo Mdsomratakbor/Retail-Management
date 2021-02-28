@@ -31,6 +31,40 @@ namespace RMDekstopUI.ViewModels
             }
         }
 
+        private UserModel _selectedUser;
+        public UserModel SelectedUser
+        {
+            get { return _selectedUser; }
+            set { 
+                _selectedUser = value;
+                SelectedUserName = value.Email;
+                NotifyOfPropertyChange(() => SelectedUser);
+            }
+        }
+
+        private string _selecteduserName;
+        public string SelectedUserName
+        {
+            get { return _selecteduserName; }
+            set
+            {
+                _selecteduserName = value;
+                NotifyOfPropertyChange(() => SelectedUserName);
+            }
+        }
+
+        private BindingList<string> _selectedUserRoles = new BindingList<string>();
+
+        public  BindingList<string> SelectedUserRoles
+        {
+            get { return _selectedUserRoles; }
+            set { 
+                _selectedUserRoles = value;
+            }
+        }
+
+
+
         public UserDisplayViewModel(StatusInfoViewModel status, IWindowManager window, IUserEndPoint userEndPoint)
         {
             this._status = status;
