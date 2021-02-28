@@ -46,7 +46,9 @@ namespace RMDekstopUI
             _container.Instance(ConfigurAutoMapper());
             _container.Instance(_container)
                 .PerRequest<IProductEndPoint, ProductEndPoint>()
+                .PerRequest<IUserEndPoint, UserEndPoint>()
                 .PerRequest<ISaleEndPoint, SaleEndPoint>();
+
             _container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
