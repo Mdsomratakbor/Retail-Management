@@ -34,6 +34,10 @@ namespace RMDekstopUI.ViewModels
         {
            await TryCloseAsync();
         }
+        public async Task UserManagement()
+        {
+            await ActivateItemAsync(IoC.Get<UserDisplayViewModel>());
+        }
         public async Task  LogOut()
         {
             _user.ResetUserModel();

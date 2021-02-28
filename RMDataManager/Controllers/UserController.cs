@@ -12,7 +12,7 @@ using System.Web.Http;
 namespace RMDataManager.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/User")]
+  
     public class UserController : ApiController
     {
         [HttpGet]
@@ -23,9 +23,9 @@ namespace RMDataManager.Controllers
             UserData data = new UserData();
            return data.GetUserById(userId).FirstOrDefault();
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize (Roles ="Admin")]
         [HttpGet]
-        [Route("Admin/GetAllUsers")]
+        [Route("api/User/Admin/GetAllUsers")]
         public List<ApplicationUserModel> GetAllUsers()
         {
 
