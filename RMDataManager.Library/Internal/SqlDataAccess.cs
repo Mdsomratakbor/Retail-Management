@@ -5,14 +5,22 @@ using System.Data;
 using Dapper;
 using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace RMDataManager.Library.Internal.DataAccess
 {
     internal class SqlDataAccess : IDisposable
     {
+        private readonly IConfiguration _config;
+        public SqlDataAccess(IConfiguration config)
+        {
+            _config = config;
+        }
         public string GetConnectionString(string name)
         {
-            return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+            //return @"Server=DESKTOP-NAVD66F\SA;Database=RMData;Trusted_Connection=True";
+            //  return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+            return _config.GetConnectionString(name);
         }
 
         public List<T> LoadData<T, U>(string storeProcedure, U parametars, string connectionStringName)
@@ -62,6 +70,8 @@ namespace RMDataManager.Library.Internal.DataAccess
             isClosed = false;
         }
         private bool isClosed = false;
+      
+
         public void CommitTransaction()
         {
             _transation?.Commit();
