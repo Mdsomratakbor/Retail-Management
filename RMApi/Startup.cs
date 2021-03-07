@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 //using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace RMApi
 {
@@ -44,7 +45,20 @@ namespace RMApi
                 options.DefaultAuthenticateScheme = "JwtBearer";
                 options.DefaultChallengeScheme = "JwtBearer";
             })
-                .AddJwtBearer();
+                .AddJwtBearer("JwtBearer", jwtBeararOptions =>
+                {
+                    jwtBeararOptions.TokenValidationParameters = new TokenValidationParameters 
+                    {
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey =   new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySecretKeyIsSecretSoDoNotTell")),
+                       ValidateIssuer = false,
+                       ValidateAudience = false,
+                       ValidateLifetime = true,
+                       ClockSkew = TimeSpan.FromMinutes(5)
+                    };
+                });
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

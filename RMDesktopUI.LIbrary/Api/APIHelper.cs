@@ -46,7 +46,7 @@ namespace RMDesktopUI.LIbrary.Api
             new KeyValuePair<string, string>("username", userName),
             new KeyValuePair<string, string>("password", password)
             });
-            using (HttpResponseMessage response = await _apiClient.PostAsync("/Token", data))
+            using (HttpResponseMessage response = await _apiClient.PostAsync("/token", data))
             {
                 if (response.IsSuccessStatusCode)
                 {
