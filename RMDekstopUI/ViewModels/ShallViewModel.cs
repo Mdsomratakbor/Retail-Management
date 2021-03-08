@@ -27,7 +27,7 @@ namespace RMDekstopUI.ViewModels
               _salesVM = salesVM;
             _container = container;
             _events.SubscribeOnPublishedThread(this);
-            ActivateItemAsync(IoC.Get<LoginViewModel>());
+            ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
 
         }
         public async Task  ExitApplication()
@@ -36,13 +36,13 @@ namespace RMDekstopUI.ViewModels
         }
         public async Task UserManagement()
         {
-            await ActivateItemAsync(IoC.Get<UserDisplayViewModel>());
+            await ActivateItemAsync(IoC.Get<UserDisplayViewModel>(), new CancellationToken());
         }
         public async Task  LogOut()
         {
             _user.ResetUserModel();
             _apiHelper.LogOffUser();
-           await  ActivateItemAsync(IoC.Get<LoginViewModel>());
+           await  ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
         public bool IsLoggedIn
@@ -61,7 +61,7 @@ namespace RMDekstopUI.ViewModels
 
         public async Task HandleAsync(LogOnEventModel message, CancellationToken cancellationToken)
         {
-            await ActivateItemAsync(_salesVM);
+            await ActivateItemAsync(_salesVM, cancellationToken);
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
     }
