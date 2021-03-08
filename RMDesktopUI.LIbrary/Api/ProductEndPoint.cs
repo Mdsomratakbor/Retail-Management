@@ -18,7 +18,7 @@ namespace RMDesktopUI.LIbrary.Api
 
         public async Task<List<ProductModel>> GetAll()
         {
-            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/product/"))
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/Product/product"))
             {
                 if (response.IsSuccessStatusCode)
                 {

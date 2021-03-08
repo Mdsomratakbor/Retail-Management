@@ -22,8 +22,9 @@ namespace RMApi.Controllers
             _context = context;
             _userManager = userManager;
         }
-        [Route("/token")]
         [HttpPost]
+        [Route("/token")]
+   
         public async Task<IActionResult> Create(string userName, string password, string grant_type)
         {
             if (await IsValidUsernameAndPassword(userName, password))

@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 
 namespace RMApi.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles ="Cashier")]
+    [Authorize(Roles ="Cashier, Admin")]
     public class ProductController : ControllerBase
     {
         private readonly IConfiguration _config;
@@ -20,7 +21,9 @@ namespace RMApi.Controllers
         {
             _config = config;
         }
-        [Route("api/product")]
+        [HttpGet]
+        [Route("product")]
+ 
         public List<ProductModel> Get()
         {
             ProductData data = new ProductData(_config);
