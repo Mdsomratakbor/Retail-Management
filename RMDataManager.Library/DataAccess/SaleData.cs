@@ -10,28 +10,30 @@ using System.Threading.Tasks;
 
 namespace RMDataManager.Library.DataAccess
 {
-    public class SaleData
+    public class SaleData : ISaleData
     {
-        private readonly IConfiguration _config;
-        public SaleData(IConfiguration config)
+        private readonly IProductData _productData;
+        private readonly ISqlDataAccess _sql;
+
+        public SaleData(IProductData productData, ISqlDataAccess sql)
         {
-            _config = config;
+            _productData = productData;
+            _sql = sql;
         }
-        public void SaveSale(SaleModel saleInfo,string cashierId)
+        public void SaveSale(SaleModel saleInfo, string cashierId)
         {
             List<SaleDetailDBModel> details = new List<SaleDetailDBModel>();
-            ProductData product = new ProductData(_config);
-            var taxRate = ConfigHelper.GetTaxRate()/100;
+            var taxRate = ConfigHelper.GetTaxRate() / 100;
             foreach (var item in saleInfo.SalesDetails)
             {
-               var  detail = new SaleDetailDBModel
+                var detail = new SaleDetailDBModel
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity
                 };
-              
-               var productInfo = product.GetProductById(item.ProductId);
-                if(productInfo== null)
+
+                var productInfo = _productData.GetProductById(item.ProductId);
+                if (productInfo == null)
                 {
                     throw new Exception($"The Product Id of {item.ProductId} could not be found int the database.");
                 }
@@ -47,43 +49,42 @@ namespace RMDataManager.Library.DataAccess
             SaleDBModel sale = new SaleDBModel
             {
                 SubTotal = details.Sum(x => x.PurchasePrice),
-                Tax = details.Sum(x=>x.Tax),
-                CashierId = cashierId, 
+                Tax = details.Sum(x => x.Tax),
+                CashierId = cashierId,
 
             };
             sale.Total = sale.SubTotal + sale.Tax;
 
-            
 
-            using (SqlDataAccess sql = new SqlDataAccess(_config))
+
+
+            try
             {
-                try
+                _sql.StartTransaction("RMDatabaseConnection");
+                _sql.SaveDataInTransaction<SaleDBModel>("dbo.spSale_Insert", sale);
+
+                sale.Id = _sql.LoadDataInTransaction<int, dynamic>("dbo.spSale_Lookup", new { CashierId = sale.CashierId, SaleDate = sale.SaleDate }).FirstOrDefault();
+
+                details.ForEach(item =>
                 {
-                    sql.StartTransaction("RMDatabaseConnection");
-                    sql.SaveDataInTransaction<SaleDBModel>("dbo.spSale_Insert", sale);
-
-                    sale.Id = sql.LoadDataInTransaction<int, dynamic>("dbo.spSale_Lookup", new { CashierId = sale.CashierId, SaleDate = sale.SaleDate }).FirstOrDefault();
-
-                    details.ForEach(item =>
-                    {
-                        item.SaleId = sale.Id; sql.SaveDataInTransaction("dbo.spSalesDetail_Insert", item);
-                    });
-                    sql.CommitTransaction();
-                }
-                catch 
-                {
-
-                    sql.RollbackTransaction();
-                    throw;
-                }
-
+                    item.SaleId = sale.Id; _sql.SaveDataInTransaction("dbo.spSalesDetail_Insert", item);
+                });
+                _sql.CommitTransaction();
             }
+            catch
+            {
+
+                _sql.RollbackTransaction();
+                throw;
+            }
+
+
         }
 
         public List<SaleReportModel> GetSaleReport()
         {
-            SqlDataAccess sql = new SqlDataAccess(_config);
-            var output = sql.LoadData<SaleReportModel, dynamic>("dbo.spSale_SaleReport", new { }, "RMDatabaseConnection");
+
+            var output = _sql.LoadData<SaleReportModel, dynamic>("dbo.spSale_SaleReport", new { }, "RMDatabaseConnection");
             return output;
         }
     }

@@ -17,18 +17,19 @@ namespace RMApi.Controllers
     [Authorize]
     public class SalesController : ControllerBase
     {
-        private readonly IConfiguration _config;
-        public SalesController(IConfiguration config)
+        private readonly ISaleData _saleData;
+
+        public SalesController(ISaleData saleData)
         {
-            _config = config;
+            _saleData = saleData;
         }
         [Authorize(Roles = "Casheir")]
         [HttpPost]
         public void Post(SaleModel sale)
         {
-            SaleData data = new SaleData(_config);
+
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            data.SaveSale(sale, userId);
+            _saleData.SaveSale(sale, userId);
         }
         [Authorize(Roles = "Admin, Manager")]
         [HttpGet]
@@ -36,8 +37,7 @@ namespace RMApi.Controllers
     
         public List<SaleReportModel> GetSalesReport()
         {
-            SaleData data = new SaleData(_config);
-            return data.GetSaleReport();
+            return _saleData.GetSaleReport();
         }
     }
 }
