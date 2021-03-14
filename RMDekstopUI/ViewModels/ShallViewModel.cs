@@ -15,16 +15,15 @@ namespace RMDekstopUI.ViewModels
     {
      
         private readonly IEventAggregator _events;
-        private SalesViewModel _salesVM;
+
         private SimpleContainer _container;
         private ILoggedInUserModel _user;
         private IAPIHelper _apiHelper;
-        public  ShallViewModel( IEventAggregator events, SalesViewModel salesVM, SimpleContainer container, ILoggedInUserModel user, IAPIHelper apiHelper)
+        public  ShallViewModel( IEventAggregator events,  SimpleContainer container, ILoggedInUserModel user, IAPIHelper apiHelper)
         {
             _events = events;
             _user = user;
             _apiHelper = apiHelper;
-              _salesVM = salesVM;
             _container = container;
             _events.SubscribeOnPublishedThread(this);
             ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
@@ -61,7 +60,7 @@ namespace RMDekstopUI.ViewModels
 
         public async Task HandleAsync(LogOnEventModel message, CancellationToken cancellationToken)
         {
-            await ActivateItemAsync(_salesVM, cancellationToken);
+            await ActivateItemAsync(IoC.Get<SalesViewModel>(), cancellationToken);
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
     }

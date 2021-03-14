@@ -3,6 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>netcoreapp3.0</TargetFramework>
 		<UseWPF>true</UseWPF>
+		<ApplicationIcon>retail_icon_bvG_icon.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="AutoMapper" Version="10.1.1" />
